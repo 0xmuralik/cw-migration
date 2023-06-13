@@ -1,0 +1,30 @@
+{
+	"name": "Test Tokens",
+	"symbol": "TEST",
+	"minter": "pasg14cztrkr86c9nhjg83xs7hkuz4ecmwllzsa935e",
+	"collection_info": {
+		"creator": "pasg14cztrkr86c9nhjg83xs7hkuz4ecmwllzsa935e",
+		"description": "No desc",
+		"image": "https://example.com/image.png",
+		"external_link": "https://example.com/external.html",
+		"royalty_info": {
+			"payment_address": "pasg14cztrkr86c9nhjg83xs7hkuz4ecmwllzsa935e",
+			"share": "0.1"
+		}
+	},
+	"migrations": [{
+		"token_id": "0001",
+		"owner": "pasg1lav40yy5da3jdpe5hscmpy99nyukrseu8g3gxf",
+		"extension": {
+			"image": "https://strange-clan-nft.s3.us-east-2.amazonaws.com/previews/00001_Crow_Magician_v4_c3_Lava Hands_BG E2.png",
+			"image_data": null,
+			"external_url": null,
+			"description": null,
+			"name": "Crow",
+			"attributes": null,
+			"background_color": null,
+			"animation_url": null,
+			"youtube_url": null
+		}
+	}]
+}

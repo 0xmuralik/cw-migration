@@ -1,0 +1,35 @@
+{
+	"max_num_tokens": 10,
+	"cw721_code_id": 1,
+	"start_time": "1686653583",
+	"per_address_limit": 1,
+	"unit_price": {
+		"denom": "stake",
+		"amount": "0"
+	},
+	"whitelist": null,
+	"cw721_address": "pasg14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9sxwr2um",
+	"cw721_instantiate_msg": null,
+	"migration": {
+		"tokens": [{
+			"token_id": 1,
+			"is_minted": true,
+			"metadata": {
+				"image": "https://strange-clan-nft.s3.us-east-2.amazonaws.com/previews/00001_Crow_Magician_v4_c3_Lava Hands_BG E2.png",
+				"image_data": null,
+				"external_url": null,
+				"description": null,
+				"name": "Crow",
+				"attributes": null,
+				"background_color": null,
+				"animation_url": null,
+				"youtube_url": null
+			}
+		}],
+		"mintable_tokens": [2, 3, 4, 5, 6, 7, 8, 9, 10],
+		"minters": [{
+			"address": "pasg1lav40yy5da3jdpe5hscmpy99nyukrseu8g3gxf",
+			"mints": 1
+		}]
+	}
+}
