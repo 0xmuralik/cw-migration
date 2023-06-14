@@ -30,6 +30,8 @@ def main():
     # tokens = []
     rest = []
     minters =[]
+    tokens=[]
+    mintable_tokens=[]
 
     # URL with pagination
     url = "https://juno.stakesystems.io/cosmwasm/wasm/v1/contract/juno15yalm0qgg0wzs4etkzzputy7hum8ryzc0rrfzfplnqjeyfrpufwq9u2zwd/state"
@@ -49,12 +51,21 @@ def main():
 
         # Append each JSON object to the existing array
         for json_object in json_objects:
+            type=""
+            if json_object.get("key").startswith("000A746F6B656E5F6D696E74"):
+                type="token"
+            
             json_object=decode_obj(json_object)
 
-            if json_object.get("key").startswith("\u0000\u000eminter_address"):
+            if type == "token":
+                token=json.loads(json_object.get("value"))
+                append_to_json_array(tokens,token)
+            elif json_object.get("key").startswith("\u0000\u000eminter_address"):
                 address=convert_addr(json_object.get("key")[16:])
                 minter={"address":address,"mints":json_object.get("value")}
                 append_to_json_array(minters,minter)
+            elif json_object.get("key") == "mintable_token_ids":
+                mintable_tokens=json.loads(json_object.get("value"))
             else:
                 append_to_json_array(rest, json_object)
 
@@ -64,7 +75,7 @@ def main():
         if not pagination_key:
             break
     
-    models = {"minters":minters,"models":rest}
+    models = {"tokens":tokens,"minters":minters,"mintable_tokens":mintable_tokens,"models":rest}
 
     # Save the updated JSON array to a file
     with open("mint.json", "w") as file:
