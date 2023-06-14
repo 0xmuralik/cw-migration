@@ -2,6 +2,8 @@ import requests
 import json
 import base64
 import bech32
+import os
+from dotenv import load_dotenv
 
 def fetch_json(url):
     response = requests.get(url)
@@ -21,12 +23,15 @@ def convert_addr(addr):
     return bech32.bech32_encode("pasg",data)
 
 def main():
-    # Existing JSON array
+    # JSON array
     tokens = []
     rest = []
 
+    contract_address=os.getenv("nft_address")
+
     # URL with pagination
-    url = "https://juno.stakesystems.io/cosmwasm/wasm/v1/contract/juno10nv5896xx4v6wu2svkghwxd0j5t8c26ehzwhr2y8q959zzwh3m8qyxryw0/state"
+    url = f"https://juno.stakesystems.io/cosmwasm/wasm/v1/contract/{contract_address}/state"
+    print("Fetching data from ",url)
     total = fetch_json(url).get("pagination").get("total")
     # Pagination loop
     pagination_key = ""
@@ -83,4 +88,7 @@ def main():
         json.dump(models, file,indent=4)
 
 if __name__ == "__main__":
+    # Load the environment variables from the .env file
+    load_dotenv()
+
     main()

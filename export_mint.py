@@ -2,6 +2,8 @@ import requests
 import json
 import base64
 import bech32
+import os
+from dotenv import load_dotenv
 
 def fetch_json(url):
     response = requests.get(url)
@@ -26,15 +28,17 @@ def convert_addr(addr):
     return bech32.bech32_encode("pasg",data)
 
 def main():
-    # Existing JSON array
-    # tokens = []
+    # JSON array
     rest = []
     minters =[]
     tokens=[]
     mintable_tokens=[]
 
+    contract_address=os.getenv("mint_address")
+
     # URL with pagination
-    url = "https://juno.stakesystems.io/cosmwasm/wasm/v1/contract/juno15yalm0qgg0wzs4etkzzputy7hum8ryzc0rrfzfplnqjeyfrpufwq9u2zwd/state"
+    url = f"https://juno.stakesystems.io/cosmwasm/wasm/v1/contract/{contract_address}/state"
+    print("Fetching data from ",url)
     total = fetch_json(url).get("pagination").get("total")
     # Pagination loop
     pagination_key = ""
@@ -82,4 +86,7 @@ def main():
         json.dump(models, file,indent=4)
 
 if __name__ == "__main__":
+     # Load the environment variables from the .env file
+    load_dotenv()
+
     main()
