@@ -15,6 +15,7 @@
 	"migrations": [{
 		"token_id": "0001",
 		"owner": "pasg1lav40yy5da3jdpe5hscmpy99nyukrseu8g3gxf",
+		"token_uri": null,
 		"extension": {
 			"image": "https://strange-clan-nft.s3.us-east-2.amazonaws.com/previews/00001_Crow_Magician_v4_c3_Lava Hands_BG E2.png",
 			"image_data": null,
