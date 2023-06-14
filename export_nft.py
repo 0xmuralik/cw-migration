@@ -26,7 +26,7 @@ def main():
     rest = []
 
     # URL with pagination
-    url = "https://juno.stakesystems.io/cosmwasm/wasm/v1/contract/juno16rl04dstt32tdgwu0kejmymfnu50kzz3meys7trj0z9wh6ypqzcqlmxqu3/state"
+    url = "https://juno.stakesystems.io/cosmwasm/wasm/v1/contract/juno10nv5896xx4v6wu2svkghwxd0j5t8c26ehzwhr2y8q959zzwh3m8qyxryw0/state"
     total = fetch_json(url).get("pagination").get("total")
     # Pagination loop
     pagination_key = ""
@@ -45,7 +45,6 @@ def main():
         for json_object in json_objects:
             json_object=decode_obj(json_object)
 
-            flag =0
             # Replace Juno address with pasg address in keys
             key=json_object.get("key")
             i=key.find("juno")
@@ -54,24 +53,23 @@ def main():
                 pasg_addr=convert_addr(juno_addr)
                 key=key.replace(juno_addr,pasg_addr)
                 json_object["key"]=key
+                append_to_json_array(rest, json_object)
             
-            elif "\u0000\u0006" in key:
+            elif key.startswith("\u0000\u0006tokens"):
                 val=json.loads(json_object.get("value"))
                 val["owner"]=convert_addr(val["owner"])
-                for approval in val["approvals"]:
-                    approval["spender"]=convert_addr(approval["spender"])
                     
-                json_object["value"]=json.dumps(val)
-                flag=1
+                token={"token_id":key[8:],"owner":val["owner"],"token_uri":val["token_uri"],"extension":val["extension"]}
+                append_to_json_array(tokens,token) 
+
             
             elif "minter" == key:
                 val=json.loads(json_object.get("value"))
                 json_object["value"]=json.dumps(convert_addr(val))
-
-            if flag == 0:
                 append_to_json_array(rest, json_object)
-            elif flag == 1:
-                append_to_json_array(tokens,json_object) 
+            
+            else: 
+                append_to_json_array(rest, json_object)
 
         # Check if there are more pages
         pagination_key = response.get("pagination").get("next_key")
@@ -81,7 +79,7 @@ def main():
     models = {"tokens": tokens,"rest": rest}
 
     # Save the updated JSON array to a file
-    with open("output.json", "w") as file:
+    with open("nft.json", "w") as file:
         json.dump(models, file,indent=4)
 
 if __name__ == "__main__":
