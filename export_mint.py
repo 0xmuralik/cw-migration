@@ -27,12 +27,36 @@ def convert_addr(addr):
     _, data = bech32.bech32_decode(addr)
     return bech32.bech32_encode("pasg",data)
 
+def create_mint_init(models):
+    mint_init={
+        "max_num_tokens": models["config"]["max_num_tokens"],
+        "cw721_code_id": int(os.getenv("new_nft_code_id")),
+        "start_time":os.getenv("start_time"),
+        "per_address_limit": models["config"]["per_address_limit"],
+        "unit_price": {
+            "denom": os.getenv("denom"),
+            "amount": os.getenv("unit_price")
+        },
+        "whitelist": os.getenv("whitelist"),
+        "cw721_address": os.getenv("new_nft_address"),
+        "cw721_instantiate_msg": None,
+        "migration":{
+            "tokens":models["tokens"],
+            "mintable_tokens":models["mintable_tokens"],
+            "minters":models["minters"]
+        }
+    }
+
+    with open("mint_init.json", "w") as file:
+        json.dump(mint_init, file,indent=4)
+
 def main():
     # JSON array
     rest = []
     minters =[]
     tokens=[]
     mintable_tokens=[]
+    config={}
 
     contract_address=os.getenv("mint_address")
 
@@ -70,6 +94,8 @@ def main():
                 append_to_json_array(minters,minter)
             elif json_object.get("key") == "mintable_token_ids":
                 mintable_tokens=json.loads(json_object.get("value"))
+            elif json_object.get("key")=="config":
+                config=json.loads(json_object.get("value"))
             else:
                 append_to_json_array(rest, json_object)
 
@@ -79,7 +105,9 @@ def main():
         if not pagination_key:
             break
     
-    models = {"tokens":tokens,"minters":minters,"mintable_tokens":mintable_tokens,"models":rest}
+    models = {"tokens":tokens,"minters":minters,"mintable_tokens":mintable_tokens,"config":config,"models":rest}
+
+    create_mint_init(models)
 
     # Save the updated JSON array to a file
     with open("mint.json", "w") as file:

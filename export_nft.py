@@ -22,10 +22,27 @@ def convert_addr(addr):
     _, data = bech32.bech32_decode(addr)
     return bech32.bech32_encode("pasg",data)
 
+def create_nft_init(models):
+    nft_init={
+        "name":models["nft_info"]["name"],
+        "symbol":models["nft_info"]["symbol"],
+        "collection_info": models["collection_info"],
+        "migrations":models["tokens"]
+    }
+    minter=os.getenv("minter_addr")
+    nft_init["minter"]=minter
+    nft_init["collection_info"]["creator"]=minter
+    nft_init["collection_info"]["royalty_info"]["payment_address"]=minter
+
+    with open("nft_init.json", "w") as file:
+        json.dump(nft_init, file,indent=4)
+
 def main():
     # JSON array
     tokens = []
     rest = []
+    nft_info={}
+    collection_info={}
 
     contract_address=os.getenv("nft_address")
 
@@ -67,7 +84,12 @@ def main():
                 token={"token_id":key[8:],"owner":val["owner"],"token_uri":val["token_uri"],"extension":val["extension"]}
                 append_to_json_array(tokens,token) 
 
-            
+            elif key=="nft_info":
+                nft_info=json.loads(json_object.get("value"))
+
+            elif key=="collection_info":
+                collection_info=json.loads(json_object.get("value"))
+
             elif "minter" == key:
                 val=json.loads(json_object.get("value"))
                 json_object["value"]=json.dumps(convert_addr(val))
@@ -81,11 +103,14 @@ def main():
         if not pagination_key:
             break
     
-    models = {"tokens": tokens,"rest": rest}
+    models = {"tokens": tokens,"nft_info":nft_info,"collection_info":collection_info,"rest": rest}
 
     # Save the updated JSON array to a file
     with open("nft.json", "w") as file:
         json.dump(models, file,indent=4)
+
+    create_nft_init(models)
+
 
 if __name__ == "__main__":
     # Load the environment variables from the .env file
