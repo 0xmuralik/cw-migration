@@ -65,7 +65,7 @@ def main():
     models = {"models":rest}
 
     # Save the updated JSON array to a file
-    with open("admin.json", "w") as file:
+    with open("output/output.json", "w") as file:
         json.dump(models, file,indent=4)
 
 if __name__ == "__main__":

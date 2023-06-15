@@ -34,7 +34,7 @@ def create_nft_init(models):
     nft_init["collection_info"]["creator"]=minter
     nft_init["collection_info"]["royalty_info"]["payment_address"]=minter
 
-    with open("nft_init.json", "w") as file:
+    with open("output/nft_init.json", "w") as file:
         json.dump(nft_init, file,indent=4)
 
 def main():
@@ -106,7 +106,7 @@ def main():
     models = {"tokens": tokens,"nft_info":nft_info,"collection_info":collection_info,"rest": rest}
 
     # Save the updated JSON array to a file
-    with open("nft.json", "w") as file:
+    with open("output/nft.json", "w") as file:
         json.dump(models, file,indent=4)
 
     create_nft_init(models)

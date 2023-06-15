@@ -47,7 +47,7 @@ def create_mint_init(models):
         }
     }
 
-    with open("mint_init.json", "w") as file:
+    with open("output/mint_init.json", "w") as file:
         json.dump(mint_init, file,indent=4)
 
 def main():
@@ -110,7 +110,7 @@ def main():
     create_mint_init(models)
 
     # Save the updated JSON array to a file
-    with open("mint.json", "w") as file:
+    with open("output/mint.json", "w") as file:
         json.dump(models, file,indent=4)
 
 if __name__ == "__main__":
