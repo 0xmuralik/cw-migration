@@ -22,20 +22,13 @@ def convert_addr(addr):
     _, data = bech32.bech32_decode(addr)
     return bech32.bech32_encode("pasg",data)
 
-def create_nft_init(models):
-    nft_init={
-        "name":models["nft_info"]["name"],
-        "symbol":models["nft_info"]["symbol"],
-        "collection_info": models["collection_info"],
+def create_nft_migrations(models):
+    nft_migrations={
         "migrations":models["tokens"]
     }
-    minter=os.getenv("minter_addr")
-    nft_init["minter"]=minter
-    nft_init["collection_info"]["creator"]=minter
-    nft_init["collection_info"]["royalty_info"]["payment_address"]=minter
 
-    with open("output/nft_init.json", "w") as file:
-        json.dump(nft_init, file,indent=4)
+    with open("output/nft_migrations.json", "w") as file:
+        json.dump(nft_migrations, file,indent=4)
 
 def main():
     # JSON array
@@ -89,11 +82,6 @@ def main():
 
             elif key=="collection_info":
                 collection_info=json.loads(json_object.get("value"))
-
-            elif "minter" == key:
-                val=json.loads(json_object.get("value"))
-                json_object["value"]=json.dumps(convert_addr(val))
-                append_to_json_array(rest, json_object)
             
             else: 
                 append_to_json_array(rest, json_object)
@@ -102,14 +90,13 @@ def main():
         pagination_key = response.get("pagination").get("next_key")
         if not pagination_key:
             break
-    
     models = {"tokens": tokens,"nft_info":nft_info,"collection_info":collection_info,"rest": rest}
 
     # Save the updated JSON array to a file
     with open("output/nft.json", "w") as file:
         json.dump(models, file,indent=4)
 
-    create_nft_init(models)
+    create_nft_migrations(models)
 
 
 if __name__ == "__main__":

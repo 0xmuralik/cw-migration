@@ -27,28 +27,15 @@ def convert_addr(addr):
     _, data = bech32.bech32_decode(addr)
     return bech32.bech32_encode("pasg",data)
 
-def create_mint_init(models):
-    mint_init={
-        "max_num_tokens": models["config"]["max_num_tokens"],
-        "cw721_code_id": int(os.getenv("new_nft_code_id")),
-        "start_time":os.getenv("start_time"),
-        "per_address_limit": models["config"]["per_address_limit"],
-        "unit_price": {
-            "denom": os.getenv("denom"),
-            "amount": os.getenv("unit_price")
-        },
-        "whitelist": os.getenv("whitelist"),
-        "cw721_address": os.getenv("new_nft_address"),
-        "cw721_instantiate_msg": None,
-        "migration":{
-            "tokens":models["tokens"],
-            "mintable_tokens":models["mintable_tokens"],
-            "minters":models["minters"]
-        }
+def create_mint_migrations(models):
+    mint_migrations={
+        "tokens":models["tokens"],
+        "mintable_tokens":models["mintable_tokens"],
+        "minters":models["minters"]
     }
 
-    with open("output/mint_init.json", "w") as file:
-        json.dump(mint_init, file,indent=4)
+    with open("output/mint_migrations.json", "w") as file:
+        json.dump(mint_migrations, file,indent=4)
 
 def main():
     # JSON array
@@ -90,7 +77,7 @@ def main():
                 append_to_json_array(tokens,token)
             elif json_object.get("key").startswith("\u0000\u000eminter_address"):
                 address=convert_addr(json_object.get("key")[16:])
-                minter={"address":address,"mints":json_object.get("value")}
+                minter={"address":address,"mints":int(json_object.get("value"))}
                 append_to_json_array(minters,minter)
             elif json_object.get("key") == "mintable_token_ids":
                 mintable_tokens=json.loads(json_object.get("value"))
@@ -107,7 +94,7 @@ def main():
     
     models = {"tokens":tokens,"minters":minters,"mintable_tokens":mintable_tokens,"config":config,"models":rest}
 
-    create_mint_init(models)
+    create_mint_migrations(models)
 
     # Save the updated JSON array to a file
     with open("output/mint.json", "w") as file:
