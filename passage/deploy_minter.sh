@@ -29,7 +29,7 @@ MINT_INIT='{
   "cw721_instantiate_msg": null
 }'
 
-echo $MINT_INIT
+echo "$MINT_INIT"
 
 # instantiate contract
 echo "Instantiating contract..."
