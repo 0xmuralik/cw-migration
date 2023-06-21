@@ -27,7 +27,7 @@ def create_nft_migrations(models):
         "migrations":models["tokens"]
     }
 
-    with open("output/nft_migrations.json", "w") as file:
+    with open("../output/nft_migrations.json", "w") as file:
         json.dump(nft_migrations, file,indent=4)
 
 def main():
@@ -93,7 +93,7 @@ def main():
     models = {"tokens": tokens,"nft_info":nft_info,"collection_info":collection_info,"rest": rest}
 
     # Save the updated JSON array to a file
-    with open("output/nft.json", "w") as file:
+    with open("../output/nft.json", "w") as file:
         json.dump(models, file,indent=4)
 
     create_nft_migrations(models)

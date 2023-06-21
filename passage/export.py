@@ -34,7 +34,7 @@ def main():
     mintable_tokens=[]
 
     # URL with pagination
-    url = "https://juno.stakesystems.io/cosmwasm/wasm/v1/contract/juno1zamh9zqsp4rzc6u77n7j4tlwz25v8ymge8qt9g67krj8er46003s3p0fpa/state"
+    url = "http://localhost:1317/cosmwasm/wasm/v1/contract/juno1z7ugv04zu5arz8zg3xf2cn7dzgp4jec82mqk6pwfy7kvh82wt4wqq4l8zq/state"
     total = fetch_json(url).get("pagination").get("total")
     # Pagination loop
     pagination_key = ""
@@ -65,7 +65,7 @@ def main():
     models = {"models":rest}
 
     # Save the updated JSON array to a file
-    with open("output/output.json", "w") as file:
+    with open("../output/output.json", "w") as file:
         json.dump(models, file,indent=4)
 
 if __name__ == "__main__":

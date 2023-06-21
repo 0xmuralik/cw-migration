@@ -38,7 +38,7 @@ passage tx wasm instantiate "$CODE_ID" "$MINT_INIT" --from $KEY --chain-id $CHAI
 MINT_CONTRACT=$(passage query wasm list-contract-by-code "$CODE_ID" --output json | jq -r '.contracts[-1]')
 
 echo "Minter contract deployed. Minter contract address: $MINT_CONTRACT"
-len=$(jq '.tokens | length' output/mint_migrations.json)
+len=$(jq '.tokens | length' ../output/mint_migrations.json)
 batch_size=50
 iterations=$(((len + batch_size -1) / batch_size))
 
@@ -46,7 +46,7 @@ iterations=$(((len + batch_size -1) / batch_size))
 for ((i=0;i<iterations;i++)); do 
     start_index=$((i*batch_size))
     end_index=$((start_index+batch_size))
-    TOKENS=$(jq ".tokens[$start_index:$end_index]" output/mint_migrations.json)
+    TOKENS=$(jq ".tokens[$start_index:$end_index]" ../output/mint_migrations.json)
     MIGRATIONS='{
         "migrate_data": {
             "migrations": {
@@ -61,13 +61,13 @@ for ((i=0;i<iterations;i++)); do
 done
 
 # migrate minters
-len=$(jq '.minters | length' output/mint_migrations.json)
+len=$(jq '.minters | length' ../output/mint_migrations.json)
 batch_size=50
 iterations=$(((len + batch_size -1) / batch_size))
 for ((i=0;i<iterations;i++)); do 
     start_index=$((i*batch_size))
     end_index=$((start_index+batch_size))
-    MINTERS=$(jq ".minters[$start_index:$end_index]" output/mint_migrations.json)
+    MINTERS=$(jq ".minters[$start_index:$end_index]" ../output/mint_migrations.json)
     MIGRATIONS='{
         "migrate_data": {
             "migrations": {
@@ -83,7 +83,7 @@ for ((i=0;i<iterations;i++)); do
 done
 
 # migrate mintable_tokens
-MINTABLE_TOKENS=$(jq ".mintable_tokens" output/mint_migrations.json)
+MINTABLE_TOKENS=$(jq ".mintable_tokens" ../output/mint_migrations.json)
 
 MIGRATIONS='{
         "migrate_data": {

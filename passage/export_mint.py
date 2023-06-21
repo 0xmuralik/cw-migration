@@ -34,7 +34,7 @@ def create_mint_migrations(models):
         "minters":models["minters"]
     }
 
-    with open("output/mint_migrations.json", "w") as file:
+    with open("../output/mint_migrations.json", "w") as file:
         json.dump(mint_migrations, file,indent=4)
 
 def main():
@@ -97,7 +97,7 @@ def main():
     create_mint_migrations(models)
 
     # Save the updated JSON array to a file
-    with open("output/mint.json", "w") as file:
+    with open("../output/mint.json", "w") as file:
         json.dump(models, file,indent=4)
 
 if __name__ == "__main__":

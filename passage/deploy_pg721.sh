@@ -43,7 +43,7 @@ NFT_CONTRACT=$(passage query wasm list-contract-by-code "$NFT_CODE_ID" --output 
 sed -i "s/^new_nft_address=.*/new_nft_address=$NFT_CONTRACT/" .env
 
 echo "NFT contract deployed. NFT contract address: $NFT_CONTRACT"
-len=$(jq '.migrations | length' output/nft_migrations.json)
+len=$(jq '.migrations | length' ../output/nft_migrations.json)
 batch_size=50
 iterations=$(((len + batch_size -1) / batch_size))
 
@@ -51,7 +51,7 @@ iterations=$(((len + batch_size -1) / batch_size))
 for ((i=0;i<iterations;i++)); do 
     start_index=$((i*batch_size))
     end_index=$((start_index+batch_size))
-    TOKENS=$(jq ".migrations[$start_index:$end_index]" output/nft_migrations.json)
+    TOKENS=$(jq ".migrations[$start_index:$end_index]" ../output/nft_migrations.json)
     MIGRATIONS='{
         "migrate": {
             "migrations": '$TOKENS'
