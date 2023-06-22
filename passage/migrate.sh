@@ -11,4 +11,7 @@ python3 export_mint.py
 
 
 # migrate minter contract
-./deploy_minter.sh "$NFT_CODE_ID" "$NFT_CONTRACT"
+./deploy_minter.sh
+
+# update minter in pg721 (needs migration) and mint a new nft
+./update_minter.sh

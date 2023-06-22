@@ -1,11 +1,9 @@
 #!/bin/bash
-CHAINID="junod-1"
-KEY="mykey"
-PATH_TO_CONTRACTS="/home/vitwit/passage/passage-contracts"
-CURRENT_DIR=$(pwd)
-ADDR=$(junod keys show $KEY -a)
+source .env
 
-cd $PATH_TO_CONTRACTS || exit
+ADDR=$(junod keys show "$KEY" -a)
+
+cd "$PATH_TO_CONTRACTS" || exit
 git switch main
 cd "$CURRENT_DIR" || exit
 
@@ -13,7 +11,7 @@ cd "$CURRENT_DIR" || exit
 sed -i "s/^minter_addr=.*/minter_addr=$ADDR/" .env
 
 echo "Deploying pg721 metadata onchain contract..."
-junod tx wasm store "$PATH_TO_CONTRACTS"/artifacts/pg721_metadata_onchain.wasm --from $KEY --gas auto --gas-adjustment 1.15 --chain-id $CHAINID -y -b block
+junod tx wasm store "$PATH_TO_CONTRACTS"/artifacts/pg721_metadata_onchain.wasm --from "$KEY" --gas auto --gas-adjustment 1.15 --chain-id "$CHAINID" -y -b block
 
 
 
@@ -39,7 +37,7 @@ NFT_INIT='{
 
 # instantiate contract
 echo "Instantiating contract..."
-junod tx wasm instantiate "$NFT_CODE_ID" "$NFT_INIT" --from $KEY --chain-id $CHAINID --label "nft metadata onchain" --admin $KEY --gas auto --gas-adjustment 1.15 -y -b block
+junod tx wasm instantiate "$NFT_CODE_ID" "$NFT_INIT" --from "$KEY" --chain-id "$CHAINID" --label "nft metadata onchain" --admin "$KEY" --gas auto --gas-adjustment 1.15 -y -b block
 
 NFT_CONTRACT=$(junod query wasm list-contract-by-code "$NFT_CODE_ID" --output json | jq -r '.contracts[-1]')
 sed -i "s/^new_nft_address=.*/new_nft_address=$NFT_CONTRACT/" .env

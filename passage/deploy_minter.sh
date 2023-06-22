@@ -1,16 +1,10 @@
 #!/bin/bash
-CHAINID="passage-1"
-KEY="mykey"
-PATH_TO_CONTRACTS="/home/vitwit/passage/passage-contracts"
-
 source .env
 echo "new nft code id: $new_nft_code_id"
 echo "new nft address: $new_nft_address"
 
 echo "Deploying minter contract..."
-passage tx wasm store "$PATH_TO_CONTRACTS"/artifacts/minter_metadata_onchain.wasm --from $KEY --gas auto --gas-adjustment 1.15 --chain-id $CHAINID -y -b block
-
-
+passage tx wasm store "$PATH_TO_CONTRACTS"/artifacts/minter_metadata_onchain.wasm --from "$KEY" --gas auto --gas-adjustment 1.15 --chain-id "$CHAINID" -y -b block
 
 CODE_ID=$(passage query wasm list-code --output json | jq -r '.code_infos[-1].code_id')
 CURRENT_TIME=$(($(date +%s)+600))
@@ -33,11 +27,13 @@ echo "$MINT_INIT"
 
 # instantiate contract
 echo "Instantiating contract..."
-passage tx wasm instantiate "$CODE_ID" "$MINT_INIT" --from $KEY --chain-id $CHAINID --label "minter metadata onchain" --no-admin --gas auto --gas-adjustment 1.15 -y -b block
+passage tx wasm instantiate "$CODE_ID" "$MINT_INIT" --from "$KEY" --chain-id "$CHAINID" --label "minter metadata onchain" --admin "$minter_addr" --gas auto --gas-adjustment 1.15 -y -b block
 
 MINT_CONTRACT=$(passage query wasm list-contract-by-code "$CODE_ID" --output json | jq -r '.contracts[-1]')
 
 echo "Minter contract deployed. Minter contract address: $MINT_CONTRACT"
+sed -i "s/^new_mint_address=.*/new_mint_address=$MINT_CONTRACT/" .env
+
 len=$(jq '.tokens | length' ../output/mint_migrations.json)
 batch_size=50
 iterations=$(((len + batch_size -1) / batch_size))
@@ -56,7 +52,7 @@ for ((i=0;i<iterations;i++)); do
     }'
 
     echo "Migrating tokens $((i+1)) / $iterations"
-    passage tx wasm execute "$MINT_CONTRACT" "$MIGRATIONS" --amount 100stake --from $KEY --chain-id $CHAINID --gas auto --gas-adjustment 1.15 -y -b block
+    passage tx wasm execute "$MINT_CONTRACT" "$MIGRATIONS" --from "$KEY" --chain-id "$CHAINID" --gas auto --gas-adjustment 1.15 -y -b block
 
 done
 
@@ -77,7 +73,7 @@ for ((i=0;i<iterations;i++)); do
     }'
 
     echo "Migrating minters $((i+1)) / $iterations"
-    passage tx wasm execute "$MINT_CONTRACT" "$MIGRATIONS" --amount 100stake --from $KEY --chain-id $CHAINID --gas auto --gas-adjustment 1.15 -y -b block
+    passage tx wasm execute "$MINT_CONTRACT" "$MIGRATIONS" --from "$KEY" --chain-id "$CHAINID" --gas auto --gas-adjustment 1.15 -y -b block
 
     
 done
@@ -94,15 +90,10 @@ MIGRATIONS='{
     }'
 
     echo "Migrating mintable tokens"
-    passage tx wasm execute "$MINT_CONTRACT" "$MIGRATIONS" --amount 100stake --from $KEY --chain-id $CHAINID --gas auto --gas-adjustment 1.15 -y -b block
+    passage tx wasm execute "$MINT_CONTRACT" "$MIGRATIONS" --from "$KEY" --chain-id "$CHAINID" --gas auto --gas-adjustment 1.15 -y -b block
 
     
 
 # mark migration done
 echo "Migration done"
-passage tx wasm execute "$MINT_CONTRACT" '{"migration_done":{}}' --amount 100stake --from $KEY --chain-id $CHAINID --gas auto --gas-adjustment 1.15 -y -b block
-
-
-
-# mint new token
-passage tx wasm execute "$MINT_CONTRACT" '{"mint":{}}' --amount 100stake --from $KEY --chain-id $CHAINID --gas auto --gas-adjustment 1.15 -y -b block
+passage tx wasm execute "$MINT_CONTRACT" '{"migration_done":{}}' --from "$KEY" --chain-id "$CHAINID" --gas auto --gas-adjustment 1.15 -y -b block

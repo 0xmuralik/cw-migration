@@ -1,15 +1,16 @@
 #!/bin/bash
-CHAINID="passage-1"
-KEY="mykey"
-PATH_TO_CONTRACTS="/home/vitwit/passage/passage-contracts"
+source .env
 
-ADDR=$(passage keys show $KEY -a)
-
+ADDR=$(passage keys show "$KEY" -a)
 # Update the value in the .env file
 sed -i "s/^minter_addr=.*/minter_addr=$ADDR/" .env
 
+cd "$PATH_TO_CONTRACTS" || exit
+git switch murali/migration
+cd "$CURRENT_DIR" || exit
+
 echo "Deploying contract..."
-passage tx wasm store "$PATH_TO_CONTRACTS"/artifacts/pg721_metadata_onchain.wasm --from $KEY --gas auto --gas-adjustment 1.15 --chain-id $CHAINID -y -b block
+passage tx wasm store "$PATH_TO_CONTRACTS"/artifacts/pg721_metadata_onchain.wasm --from "$KEY" --gas auto --gas-adjustment 1.15 --chain-id "$CHAINID" -y -b block
 
 
 
@@ -35,7 +36,7 @@ NFT_INIT='{
 
 # instantiate contract
 echo "Instantiating contract..."
-passage tx wasm instantiate "$NFT_CODE_ID" "$NFT_INIT" --from $KEY --chain-id $CHAINID --label "nft metadata onchain" --no-admin --gas auto --gas-adjustment 1.15 -y -b block
+passage tx wasm instantiate "$NFT_CODE_ID" "$NFT_INIT" --from "$KEY" --chain-id "$CHAINID" --label "nft metadata onchain" --admin "$ADDR" --gas auto --gas-adjustment 1.15 -y -b block
 
 
 
@@ -59,11 +60,11 @@ for ((i=0;i<iterations;i++)); do
     }'
 
     echo "Migration $((i+1)) / $iterations"
-    passage tx wasm execute "$NFT_CONTRACT" "$MIGRATIONS" --amount 100stake --from $KEY --chain-id $CHAINID --gas auto --gas-adjustment 1.15 -y -b block
+    passage tx wasm execute "$NFT_CONTRACT" "$MIGRATIONS" --from "$KEY" --chain-id "$CHAINID" --gas auto --gas-adjustment 1.15 -y -b block
 
     
 done
 # mark migration done
 
 echo "Migration done"
-passage tx wasm execute "$NFT_CONTRACT" '{"migration_done":{}}' --amount 100stake --from $KEY --chain-id $CHAINID --gas auto --gas-adjustment 1.15 -y -b block
+passage tx wasm execute "$NFT_CONTRACT" '{"migration_done":{}}' --from "$KEY" --chain-id "$CHAINID" --gas auto --gas-adjustment 1.15 -y -b block
