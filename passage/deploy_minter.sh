@@ -8,7 +8,7 @@ CODE_ID=$(passage query wasm list-code --output json | jq -r '.code_infos[-1].co
 
 # Load INIT payload
 MINT_INIT=$(<./init_msgs/mint/$name.json)
-MINT_INIT=$(echo "$MINT_INIT" | jq '.cw721_code_id="'"$new_nft_code_id"'"')
+MINT_INIT=$(echo "$MINT_INIT" | jq '.cw721_code_id='"$new_nft_code_id"'')
 MINT_INIT=$(echo "$MINT_INIT" | jq '.cw721_address="'"$new_nft_address"'"')
 echo "$MINT_INIT"
 
