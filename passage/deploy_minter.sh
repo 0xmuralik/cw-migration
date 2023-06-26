@@ -1,28 +1,15 @@
 #!/bin/bash
 source .env
-echo "new nft code id: $new_nft_code_id"
-echo "new nft address: $new_nft_address"
 
 echo "Deploying minter contract..."
 passage tx wasm store "$PATH_TO_CONTRACTS"/artifacts/minter_metadata_onchain.wasm --from "$KEY" --gas auto --gas-adjustment 1.15 --chain-id "$CHAINID" -y -b block
 
 CODE_ID=$(passage query wasm list-code --output json | jq -r '.code_infos[-1].code_id')
-CURRENT_TIME=$(($(date +%s)+600))
-# Load INIT payload
-MINT_INIT='{
-  "max_num_tokens": 10000,
-  "cw721_code_id": '$new_nft_code_id',
-  "per_address_limit": 10000,
-  "whitelist": null,
-  "cw721_address": "'$new_nft_address'",
-  "start_time": "'$CURRENT_TIME'000000000",
-  "unit_price": {
-    "amount": "'$unit_price'",
-    "denom": "'$denom'"
-  },
-  "cw721_instantiate_msg": null
-}'
 
+# Load INIT payload
+MINT_INIT=$(<./init_msgs/mint/$name.json)
+MINT_INIT=$(echo "$MINT_INIT" | jq '.cw721_code_id="'"$new_nft_code_id"'"')
+MINT_INIT=$(echo "$MINT_INIT" | jq '.cw721_address="'"$new_nft_address"'"')
 echo "$MINT_INIT"
 
 # instantiate contract

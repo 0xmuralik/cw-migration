@@ -1,0 +1,13 @@
+{
+	"max_num_tokens": 10000,
+	"cw721_code_id": "${new_nft_code_id}",
+	"per_address_limit": 10000,
+	"whitelist": null,
+	"cw721_address": "${new_nft_address}",
+	"start_time": "${start_time}000000000",
+	"unit_price": {
+		"amount": "1000",
+		"denom": "upasg"
+	},
+	"cw721_instantiate_msg": null
+}

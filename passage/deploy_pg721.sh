@@ -18,27 +18,12 @@ NFT_CODE_ID=$(passage query wasm list-code --output json | jq -r '.code_infos[-1
 sed -i "s/^new_nft_code_id=.*/new_nft_code_id=$NFT_CODE_ID/" .env
 
 # Load INIT payload
-NFT_INIT='{
-  "name": "MetaHuahua",
-  "symbol": "MH",
-  "minter": "'$ADDR'",
-  "collection_info": {
-    "creator": "pasg166a65em64adkm8mt8j2wcz7hzlq52x9qvm06ev",
-    "description": "THE WOOFIEST PASSPORT TO THE METAVERSE",
-    "image": "ipfs://bafybeideczllcb5kz75hgy25irzevarybvazgdiaeiv2xmgqevqgo6d3ua/2990.png",
-    "external_link": "https://www.aaa-metahuahua.com/",
-    "royalty_info": {
-      "payment_address": "pasg166a65em64adkm8mt8j2wcz7hzlq52x9qvm06ev",
-      "share": "0.1"
-    }
-  }
-}'
+NFT_INIT=$(<./init_msgs/nft/$name.json)
+NFT_INIT=$(echo "$NFT_INIT" | jq '.minter="'"$ADDR"'"')
 
 # instantiate contract
 echo "Instantiating contract..."
 passage tx wasm instantiate "$NFT_CODE_ID" "$NFT_INIT" --from "$KEY" --chain-id "$CHAINID" --label "nft metadata onchain" --admin "$ADDR" --gas auto --gas-adjustment 1.15 -y -b block
-
-
 
 NFT_CONTRACT=$(passage query wasm list-contract-by-code "$NFT_CODE_ID" --output json | jq -r '.contracts[-1]')
 sed -i "s/^new_nft_address=.*/new_nft_address=$NFT_CONTRACT/" .env

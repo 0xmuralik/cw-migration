@@ -1,0 +1,11 @@
+{
+	"minter": "${minter_addr}",
+	"name": "Strange Clan: Egg",
+	"symbol": "SCE",
+	"collection_info": {
+		"creator": "pasg166a65em64adkm8mt8j2wcz7hzlq52x9qvm06ev",
+		"description": "The eggs of the Strange Clan world.",
+		"external_link": "https://market.passage3d.com/",
+		"image": "ipfs://bafybeia5ekl2xcf5z6yefttabbw62qr3d42gob2gc2nghagcdo4ib7fw5q"
+	}
+}

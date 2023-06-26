@@ -1,0 +1,12 @@
+{
+	"name": "Strange Clan: Kira",
+	"symbol": "SCT2",
+	"minter": "${minter_addr}",
+	"collection_info": {
+		"creator": "pasg166a65em64adkm8mt8j2wcz7hzlq52x9qvm06ev",
+		"description": "Town 2 of the Strange Clan NFT collection",
+		"image": "ipfs://bafkreicjlpmnlnjvy4jzz5lhq3w2rqpfjhcrmirmo7srvjeij3xyobipmi",
+		"external_link": "https://market.passage3d.com/",
+		"royalty_info": null
+	}
+}

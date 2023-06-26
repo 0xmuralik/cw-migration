@@ -1,0 +1,15 @@
+{
+	"name": "Passage Marketplace",
+	"symbol": "yawp",
+	"minter": "${minter_addr}",
+	"collection_info": {
+		"creator": "pasg166a65em64adkm8mt8j2wcz7hzlq52x9qvm06ev",
+		"description": "Strange Clan Deran Fang",
+		"image": "",
+		"external_link": "",
+		"royalty_info": {
+			"payment_address": "pasg166a65em64adkm8mt8j2wcz7hzlq52x9qvm06ev",
+			"share": "0.1"
+		}
+	}
+}
