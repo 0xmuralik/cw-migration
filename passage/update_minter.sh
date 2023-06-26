@@ -14,9 +14,3 @@ sed -i "s/^new_nft_code_id=.*/new_nft_code_id=$NFT_CODE_ID/" .env
 migrate_msg='{"minter":"'"$new_mint_address"'"}' 
 echo "Change minter to minting contract...."
 passage tx wasm migrate "$new_nft_address" "$NFT_CODE_ID" "$migrate_msg" --from "$KEY" --chain-id "$CHAINID" --gas auto --gas-adjustment 1.15 -y -b block
-
-# wait for minting to start
-sleep 10
-
-echo "Minting token"
-passage tx wasm execute "$new_mint_address" '{"mint":{}}' --amount 1000upasg --from "$KEY" --chain-id "$CHAINID" --gas auto --gas-adjustment 1.15 -y -b block
