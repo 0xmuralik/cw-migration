@@ -1,0 +1,23 @@
+{
+	"contracts": [{
+			"name": "metahuahua",
+			"nft": "juno10nv5896xx4v6wu2svkghwxd0j5t8c26ehzwhr2y8q959zzwh3m8qyxryw0",
+			"mint": "juno15yalm0qgg0wzs4etkzzputy7hum8ryzc0rrfzfplnqjeyfrpufwq9u2zwd"
+		},
+		{
+			"name": "strange_clan_deran_fang",
+			"nft": "juno1za0uemnhzwkjrqwguy34w45mqdlzfm9hl4s5gp5jtc0e4xvkrwjs6s2rt4",
+			"mint": null
+		},
+		{
+			"name": "strange_clan_kira",
+			"nft": "juno10r96k8x6szjvc4yme6rh7venu2mqhuemnfnwzn7xquulqpsslp4s20ndcq",
+			"mint": "juno195qvjp8p545aghtzs3l5x45vjrzl5rjnj8zwm4dyvrtn6upks2qsc93s2t"
+		},
+		{
+			"name": "strange_clan_eggs",
+			"nft": "juno16rl04dstt32tdgwu0kejmymfnu50kzz3meys7trj0z9wh6ypqzcqlmxqu3",
+			"mint": null
+		}
+	]
+}
