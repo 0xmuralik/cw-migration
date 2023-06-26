@@ -22,6 +22,20 @@ def convert_addr(addr):
     _, data = bech32.bech32_decode(addr)
     return bech32.bech32_encode("pasg",data)
 
+def convert_attributes(attributes):
+    new_attributes=[]
+    if len(attributes.get("accessory"))>1:
+        print("multiple accessories not supported")
+        exit
+    new_attributes.append(create_trait("String","Name",attributes.get("name")))
+    new_attributes.append(create_trait("String","Base",attributes.get("base")))
+    new_attributes.append(create_trait("String","Accessory",attributes.get("accessory")[0]))
+    new_attributes.append(create_trait("String","Background",attributes.get("background")))
+    return new_attributes
+    
+def create_trait(display_type,trait_type,value):
+    return {"display_type":display_type,"trait_type":trait_type,"value":value}
+
 def create_nft_migrations(models):
     nft_migrations={
         "migrations":models["tokens"]
@@ -73,7 +87,9 @@ def main():
             elif key.startswith("\u0000\u0006tokens"):
                 val=json.loads(json_object.get("value"))
                 val["owner"]=convert_addr(val["owner"])
-                    
+                if not isinstance(val.get("extension").get("attributes"),list):
+                    val["extension"]["attributes"]=convert_attributes(val.get("extension").get("attributes"))
+
                 token={"token_id":key[8:],"owner":val["owner"],"token_uri":val["token_uri"],"extension":val["extension"]}
                 append_to_json_array(tokens,token) 
 
