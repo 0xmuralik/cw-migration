@@ -21,3 +21,5 @@ else
     # update minter addr in pg721 (needs migration) and mint a new nft
     ./update_minter.sh
 fi
+
+./deploy_marketplace.sh
