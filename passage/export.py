@@ -34,7 +34,7 @@ def main():
     mintable_tokens=[]
 
     # URL with pagination
-    url = "http://localhost:1317/cosmwasm/wasm/v1/contract/juno1z7ugv04zu5arz8zg3xf2cn7dzgp4jec82mqk6pwfy7kvh82wt4wqq4l8zq/state"
+    url = "http://143.244.137.73:1317/cosmwasm/wasm/v1/contract/pasg1sgv38zd5z4fje0djf7u08t9cdfqe0kx9nl4x3k8rdx7wkr2sttgscfgetk/state"
     total = fetch_json(url).get("pagination").get("total")
     # Pagination loop
     pagination_key = ""
