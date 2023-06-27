@@ -9,7 +9,7 @@ cd "$PATH_TO_CONTRACTS" || exit
 git switch murali/migration
 cd "$CURRENT_DIR" || exit
 
-echo "Deploying contract..."
+echo "Deploying $name nft contract..."
 passage tx wasm store "$PATH_TO_CONTRACTS"/artifacts/pg721_metadata_onchain.wasm --from "$KEY" --gas auto --gas-adjustment 1.15 --chain-id "$CHAINID" -y -b block
 
 
@@ -22,13 +22,13 @@ NFT_INIT=$(<./init_msgs/nft/$name.json)
 NFT_INIT=$(echo "$NFT_INIT" | jq '.minter="'"$ADDR"'"')
 
 # instantiate contract
-echo "Instantiating contract..."
+echo "Instantiating $name nft contract..."
 passage tx wasm instantiate "$NFT_CODE_ID" "$NFT_INIT" --from "$KEY" --chain-id "$CHAINID" --label "nft metadata onchain" --admin "$ADDR" --gas auto --gas-adjustment 1.15 -y -b block
 
 NFT_CONTRACT=$(passage query wasm list-contract-by-code "$NFT_CODE_ID" --output json | jq -r '.contracts[-1]')
 sed -i "s/^new_nft_address=.*/new_nft_address=$NFT_CONTRACT/" .env
 
-echo "NFT contract deployed. NFT contract address: $NFT_CONTRACT"
+echo "$name NFT contract deployed. NFT contract address: $NFT_CONTRACT"
 len=$(jq '.migrations | length' ../output/nft_migrations.json)
 batch_size=50
 iterations=$(((len + batch_size -1) / batch_size))

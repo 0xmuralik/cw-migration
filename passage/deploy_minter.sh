@@ -1,7 +1,11 @@
 #!/bin/bash
 source .env
 
-echo "Deploying minter contract..."
+cd "$PATH_TO_CONTRACTS" || exit
+git switch murali/migration
+cd "$CURRENT_DIR" || exit
+
+echo "Deploying $name minter contract..."
 passage tx wasm store "$PATH_TO_CONTRACTS"/artifacts/minter_metadata_onchain.wasm --from "$KEY" --gas auto --gas-adjustment 1.15 --chain-id "$CHAINID" -y -b block
 
 CODE_ID=$(passage query wasm list-code --output json | jq -r '.code_infos[-1].code_id')
@@ -13,12 +17,12 @@ MINT_INIT=$(echo "$MINT_INIT" | jq '.cw721_address="'"$new_nft_address"'"')
 echo "$MINT_INIT"
 
 # instantiate contract
-echo "Instantiating contract..."
+echo "Instantiating $name minting contract..."
 passage tx wasm instantiate "$CODE_ID" "$MINT_INIT" --from "$KEY" --chain-id "$CHAINID" --label "minter metadata onchain" --admin "$minter_addr" --gas auto --gas-adjustment 1.15 -y -b block
 
 MINT_CONTRACT=$(passage query wasm list-contract-by-code "$CODE_ID" --output json | jq -r '.contracts[-1]')
 
-echo "Minter contract deployed. Minter contract address: $MINT_CONTRACT"
+echo "$name minter contract deployed. Minter contract address: $MINT_CONTRACT"
 sed -i "s/^new_mint_address=.*/new_mint_address=$MINT_CONTRACT/" .env
 
 len=$(jq '.tokens | length' ../output/mint_migrations.json)
