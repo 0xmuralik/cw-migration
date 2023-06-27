@@ -18,7 +18,7 @@ for ((i=0;i<len;i++)); do
 
     source .env
     
-    new='{"name":"'$name'","nft":"'$new_nft_address'","mint":"'$new_mint_address'"}'
+    new='{"name":"'$name'","nft":"'$new_nft_address'","mint":"'$new_mint_address'","marketplace":"'$new_market_address'"}'
     NEW_CONTRACTS=$(echo "$NEW_CONTRACTS" | jq '. += ['$new']')
 done
 
