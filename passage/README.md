@@ -4,16 +4,16 @@
 
 * Install Wasm: https://book.cosmwasm.com/setting-up-env.html
 * Passage3D CLI
-    * Clone https://github.com/envadiv/Passage3D
-    * To install run `make install` inside passage3d repo
+      * Clone https://github.com/envadiv/Passage3D
+      * To install run `make install` inside passage3d repo
 * Passage Contracts
-    * Clone https://github.com/envadiv/passage-contracts
+      * Clone https://github.com/envadiv/passage-contracts
 * Migration scripts
-    * Clone https://github.com/0xmuralik/cw-migration
+       * Clone https://github.com/0xmuralik/cw-migration
 
 ### Add contracts to migrate
 
-Go to `cw-migration/contracts.json` and add the name of the contract, Juno NFT contract address and Mint contract address to the `contracts` array.
+Go to `cw-migration/contracts.json` and add the name of the contract, Juno NFT contract address, Mint contract address, Marketplace contract address and name of the admin key to the `contracts` array.
 
 Example:
 
@@ -21,8 +21,10 @@ Example:
 {
     "name": "metahuahua",
     "nft": "juno10nv5896xx4v6wu2svkghwxd0j5t8c26ehzwhr2y8q959zzwh3m8qyxryw0",
-    "mint": "juno15yalm0qgg0wzs4etkzzputy7hum8ryzc0rrfzfplnqjeyfrpufwq9u2zwd"
-} 
+    "mint": "juno15yalm0qgg0wzs4etkzzputy7hum8ryzc0rrfzfplnqjeyfrpufwq9u2zwd",
+    "marketplace": "juno1wefnd9l3fl68knhhm445mq9f2v9yyna7q63m9yl2pwkemlsrfmhqlys9p7",
+    "adminKey": "murali"
+}
 ```
 
 If there is no Mint contract for the nft, use null as the value for mint field.
@@ -42,14 +44,13 @@ The file name should be same as the name of the contract in contracts.json. `<co
 The env variables for each migration are taken from `cw-migrations/passage/.env` .
 Inside the .env file, there are 3 sets of variables.
 
-1. Configurable ENVs: Chain ID, Admin key name, Path to contracts and current directory
+1. Configurable ENVs: Chain ID, Path to contracts and current directory
 2. Contract based ENVs: Changes based on current contract migration
 3. Runtime ENVs: Temporary store to access variables accross scripts during migrations
 
 Only configurable envs must be set by the user.
 
 * ChainID: chain id of the network
-* Key: name of the admin key
 * Path to contracts: absolute path to passage-contracts
 * Current Directory: absolute path to `cw-migrations/passage` (pwd).
 
