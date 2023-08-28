@@ -17,7 +17,7 @@ junod tx wasm store "$PATH_TO_CONTRACTS"/artifacts/minter_metadata_onchain.wasm 
 
 
 
-CODE_ID=$(junod query wasm list-code --reverse --output json | jq -r '.code_infos[01].code_id')
+CODE_ID=$(junod query wasm list-code --reverse --output json | jq -r '.code_infos[0].code_id')
 CURRENT_TIME=$(($(date +%s)+10))
 # Load INIT payload
 MINT_INIT='{
