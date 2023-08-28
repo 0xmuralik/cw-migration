@@ -15,7 +15,7 @@ junod tx wasm store "$PATH_TO_CONTRACTS"/artifacts/pg721_metadata_onchain.wasm -
 
 
 
-NFT_CODE_ID=$(junod query wasm list-code --output json | jq -r '.code_infos[-1].code_id')
+NFT_CODE_ID=$(junod query wasm list-code --reverse --output json | jq -r '.code_infos[0].code_id')
 sed -i "s/^new_nft_code_id=.*/new_nft_code_id=$NFT_CODE_ID/" .env
 
 # Load INIT payload
