@@ -6,9 +6,23 @@ git switch murali/migration
 cd "$CURRENT_DIR" || exit
 
 echo "Deploying $name minter contract..."
-passage tx wasm store "$PATH_TO_CONTRACTS"/artifacts/minter_metadata_onchain.wasm --from "$KEY" --gas auto --gas-adjustment 1.15 --chain-id "$CHAINID" -y -b block --keyring-backend "$KEYRING_BACKEND" --node "$NODE"
+RESULT=$(passage tx wasm store "$PATH_TO_CONTRACTS"/artifacts/minter_metadata_onchain.wasm --from "$KEY" --gas auto --gas-adjustment 1.15 -y -b block)
 
-CODE_ID=$(passage query wasm list-code --node "$NODE" --output json | jq -r '.code_infos[-1].code_id')
+
+CODE=$(echo $RESULT | jq -r '.code')
+if [ $CODE != 0 ]; then
+    echo "Something went wrong"
+    echo $RESULT
+    exit 1
+fi
+
+TX_HASH=$(echo $RESULT | jq -r '.txhash')
+echo "tx-hash=$TX_HASH"
+
+sleep 6
+
+CODE_ID=$(passage q tx "$TX_HASH" | jq -r '.logs[0]["events"][-1]["attributes"][-1]["value"]')
+echo $CODE_ID
 
 # Load INIT payload
 MINT_INIT=$(<./init_msgs/mint/$name.json)
@@ -18,9 +32,9 @@ echo "$MINT_INIT"
 
 # instantiate contract
 echo "Instantiating $name minting contract..."
-passage tx wasm instantiate "$CODE_ID" "$MINT_INIT" --from "$KEY" --chain-id "$CHAINID" --label "minter metadata onchain" --admin "$minter_addr" --gas auto --gas-adjustment 1.15 -y -b block --keyring-backend "$KEYRING_BACKEND" --node "$NODE"
+passage tx wasm instantiate "$CODE_ID" "$MINT_INIT" --from "$KEY" --label "minter metadata onchain" --admin "$minter_addr" --gas auto --gas-adjustment 1.15 -y -b block
 
-MINT_CONTRACT=$(passage query wasm list-contract-by-code "$CODE_ID" --node "$NODE" --output json | jq -r '.contracts[-1]')
+MINT_CONTRACT=$(passage query wasm list-contract-by-code "$CODE_ID" --output json | jq -r '.contracts[-1]')
 
 echo "$name minter contract deployed. Minter contract address: $MINT_CONTRACT"
 sed -i "s/^new_mint_address=.*/new_mint_address=$MINT_CONTRACT/" .env
@@ -43,7 +57,7 @@ for ((i=0;i<iterations;i++)); do
     }'
 
     echo "Migrating tokens $((i+1)) / $iterations"
-    passage tx wasm execute "$MINT_CONTRACT" "$MIGRATIONS" --from "$KEY" --chain-id "$CHAINID" --gas auto --gas-adjustment 1.15 -y -b block --keyring-backend "$KEYRING_BACKEND" --node "$NODE"
+    passage tx wasm execute "$MINT_CONTRACT" "$MIGRATIONS" --from "$KEY" --gas auto --gas-adjustment 1.15 -y -b block
 
 done
 
@@ -64,7 +78,7 @@ for ((i=0;i<iterations;i++)); do
     }'
 
     echo "Migrating minters $((i+1)) / $iterations"
-    passage tx wasm execute "$MINT_CONTRACT" "$MIGRATIONS" --from "$KEY" --chain-id "$CHAINID" --gas auto --gas-adjustment 1.15 -y -b block --keyring-backend "$KEYRING_BACKEND" --node "$NODE"
+    passage tx wasm execute "$MINT_CONTRACT" "$MIGRATIONS" --from "$KEY" --gas auto --gas-adjustment 1.15 -y -b block
 
     
 done
@@ -81,10 +95,10 @@ MIGRATIONS='{
     }'
 
     echo "Migrating mintable tokens"
-    passage tx wasm execute "$MINT_CONTRACT" "$MIGRATIONS" --from "$KEY" --chain-id "$CHAINID" --gas auto --gas-adjustment 1.15 -y -b block --keyring-backend "$KEYRING_BACKEND" --node "$NODE"
+    passage tx wasm execute "$MINT_CONTRACT" "$MIGRATIONS" --from "$KEY" --gas auto --gas-adjustment 1.15 -y -b block
 
     
 
 # mark migration done
 echo "Migration done"
-passage tx wasm execute "$MINT_CONTRACT" '{"migration_done":{}}' --from "$KEY" --chain-id "$CHAINID" --gas auto --gas-adjustment 1.15 -y -b block --keyring-backend "$KEYRING_BACKEND" --node "$NODE"
+passage tx wasm execute "$MINT_CONTRACT" '{"migration_done":{}}' --from "$KEY" --gas auto --gas-adjustment 1.15 -y -b block
