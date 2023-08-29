@@ -826,7 +826,6 @@ sleep 10
 
 cd $PATH_TO_CONTRACTS || exit
 git switch murali/nft_version
-cd "$CURRENT_DIR" || exit
 
 echo "Deploying pg721 metadata onchain contract..."
 junod tx wasm store "$PATH_TO_CONTRACTS"/artifacts/pg721_metadata_onchain.wasm --from $KEY --gas auto --gas-adjustment 1.5 -y

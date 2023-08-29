@@ -8,7 +8,6 @@ junod config
 
 cd "$PATH_TO_CONTRACTS" || exit
 git switch main
-cd "$CURRENT_DIR" || exit
 
 # Update the value in the .env file
 sed -i "s/^minter_addr=.*/minter_addr=$ADDR/" .env

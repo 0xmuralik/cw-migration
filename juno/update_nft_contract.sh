@@ -5,7 +5,6 @@ junod config
 
 cd $PATH_TO_CONTRACTS || exit
 git switch murali/decommission
-cd "$CURRENT_DIR" || exit
 echo $PATH_TO_CONTRACTS
 
 
