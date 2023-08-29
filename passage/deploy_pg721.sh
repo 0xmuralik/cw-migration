@@ -1,7 +1,7 @@
 #!/bin/bash
 source .env
 
-ADDR=$(passage keys show "$KEY" -a)
+ADDR=$(passage keys show "$KEY" -a --keyring-backend "$KEYRING_BACKEND")
 # Update the value in the .env file
 sed -i "s/^minter_addr=.*/minter_addr=$ADDR/" .env
 
@@ -10,11 +10,11 @@ git switch murali/migration
 cd "$CURRENT_DIR" || exit
 
 echo "Deploying $name nft contract..."
-passage tx wasm store "$PATH_TO_CONTRACTS"/artifacts/pg721_metadata_onchain.wasm --from "$KEY" --gas auto --gas-adjustment 1.15 --chain-id "$CHAINID" -y -b block
+passage tx wasm store "$PATH_TO_CONTRACTS"/artifacts/pg721_metadata_onchain.wasm --from "$KEY" --gas 100000000 --gas-adjustment 1.8 --chain-id "$CHAINID" -y -b block --keyring-backend "$KEYRING_BACKEND" --node "$NODE"
 
 
 
-NFT_CODE_ID=$(passage query wasm list-code --output json | jq -r '.code_infos[-1].code_id')
+NFT_CODE_ID=$(passage query wasm list-code --node "$NODE" --output json | jq -r '.code_infos[-1].code_id')
 sed -i "s/^new_nft_code_id=.*/new_nft_code_id=$NFT_CODE_ID/" .env
 
 # Load INIT payload
@@ -23,9 +23,9 @@ NFT_INIT=$(echo "$NFT_INIT" | jq '.minter="'"$ADDR"'"')
 
 # instantiate contract
 echo "Instantiating $name nft contract..."
-passage tx wasm instantiate "$NFT_CODE_ID" "$NFT_INIT" --from "$KEY" --chain-id "$CHAINID" --label "nft metadata onchain" --admin "$ADDR" --gas auto --gas-adjustment 1.15 -y -b block
+passage tx wasm instantiate "$NFT_CODE_ID" "$NFT_INIT" --from "$KEY" --chain-id "$CHAINID" --label "nft metadata onchain" --admin "$ADDR" --gas auto --gas-adjustment 1.15 -y -b block --keyring-backend "$KEYRING_BACKEND" --node "$NODE"
 
-NFT_CONTRACT=$(passage query wasm list-contract-by-code "$NFT_CODE_ID" --output json | jq -r '.contracts[-1]')
+NFT_CONTRACT=$(passage query wasm list-contract-by-code "$NFT_CODE_ID" --node "$NODE" --output json | jq -r '.contracts[-1]')
 sed -i "s/^new_nft_address=.*/new_nft_address=$NFT_CONTRACT/" .env
 
 echo "$name NFT contract deployed. NFT contract address: $NFT_CONTRACT"
@@ -45,11 +45,11 @@ for ((i=0;i<iterations;i++)); do
     }'
 
     echo "Migration $((i+1)) / $iterations"
-    passage tx wasm execute "$NFT_CONTRACT" "$MIGRATIONS" --from "$KEY" --chain-id "$CHAINID" --gas auto --gas-adjustment 1.15 -y -b block
+    passage tx wasm execute "$NFT_CONTRACT" "$MIGRATIONS" --from "$KEY" --chain-id "$CHAINID" --gas auto --gas-adjustment 1.15 -y -b block --keyring-backend "$KEYRING_BACKEND" --node "$NODE"
 
     
 done
 # mark migration done
 
 echo "Migration done"
-passage tx wasm execute "$NFT_CONTRACT" '{"migration_done":{}}' --from "$KEY" --chain-id "$CHAINID" --gas auto --gas-adjustment 1.15 -y -b block
+passage tx wasm execute "$NFT_CONTRACT" '{"migration_done":{}}' --from "$KEY" --chain-id "$CHAINID" --gas auto --gas-adjustment 1.15 -y -b block --keyring-backend "$KEYRING_BACKEND" --node "$NODE"

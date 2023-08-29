@@ -1,10 +1,19 @@
 #!/bin/bash
-CHAINID="junod-1"
-KEY="mykey"
-PATH_TO_CONTRACTS="/home/vitwit/passage/passage-contracts"
+source .env
+
+UNIT_PRICE=100
+DENOM="ujuno"
+
+junod config
+
+ADDR=$(junod keys show "$KEY" -a)
+
+cd "$PATH_TO_CONTRACTS" || exit
+git switch main
+cd "$CURRENT_DIR" || exit
+
 CURRENT_DIR=$(pwd)
 
-source .env
 echo "new nft code id: $new_nft_code_id"
 echo "new nft address: $new_nft_address"
 
@@ -13,11 +22,17 @@ git switch main
 cd "$CURRENT_DIR" || exit
 
 echo "Deploying minter contract..."
-junod tx wasm store "$PATH_TO_CONTRACTS"/artifacts/minter_metadata_onchain.wasm --from $KEY --gas auto --gas-adjustment 1.15 --chain-id $CHAINID -y -b block
+TX_HASH=$(junod tx wasm store "$PATH_TO_CONTRACTS"/artifacts/minter_metadata_onchain.wasm --from $KEY --gas auto --gas-adjustment 1.5 -y| jq -r '.txhash')
 
+echo "tx-hash=$TX_HASH"
+echo "waiting for transaction to be included in the block"
 
+sleep 10
 
-CODE_ID=$(junod query wasm list-code --output json | jq -r '.code_infos[-1].code_id')
+CODE_ID=$(junod q tx "$TX_HASH" | jq -r '.logs[0]["events"][-1]["attributes"][-1]["value"]')
+
+echo $CODE_ID
+
 CURRENT_TIME=$(($(date +%s)+10))
 # Load INIT payload
 MINT_INIT='{
@@ -28,8 +43,8 @@ MINT_INIT='{
   "cw721_address": "'$new_nft_address'",
   "start_time": "'$CURRENT_TIME'000000000",
   "unit_price": {
-    "amount": "'$unit_price'",
-    "denom": "'$denom'"
+    "amount": "'$UNIT_PRICE'",
+    "denom": "'$DENOM'"
   },
   "cw721_instantiate_msg": null
 }'
@@ -38,7 +53,9 @@ echo "$MINT_INIT"
 
 # instantiate contract
 echo "Instantiating contract..."
-junod tx wasm instantiate "$CODE_ID" "$MINT_INIT" --from $KEY --chain-id $CHAINID --label "minter metadata onchain" --admin $KEY --gas auto --gas-adjustment 1.15 -y -b block
+junod tx wasm instantiate "$CODE_ID" "$MINT_INIT" --from $KEY --label "minter metadata onchain" --admin $KEY --gas auto --gas-adjustment 1.5 -y
+
+sleep 10
 
 MINT_CONTRACT=$(junod query wasm list-contract-by-code "$CODE_ID" --output json | jq -r '.contracts[-1]')
 
@@ -803,24 +820,30 @@ UPSERT_TOKENS='{
 }'
 
 echo "Upserting token metadata"
-junod tx wasm execute "$MINT_CONTRACT" "$UPSERT_TOKENS" --amount 100stake --from $KEY --chain-id $CHAINID --gas auto --gas-adjustment 1.15 -y -b block
+junod tx wasm execute "$MINT_CONTRACT" "$UPSERT_TOKENS" --amount 100ujuno --from $KEY --gas auto --gas-adjustment 1.5 -y
+
+sleep 10
 
 cd $PATH_TO_CONTRACTS || exit
 git switch murali/nft_version
 cd "$CURRENT_DIR" || exit
 
 echo "Deploying pg721 metadata onchain contract..."
-junod tx wasm store "$PATH_TO_CONTRACTS"/artifacts/pg721_metadata_onchain.wasm --from $KEY --gas auto --gas-adjustment 1.15 --chain-id $CHAINID -y -b block
+junod tx wasm store "$PATH_TO_CONTRACTS"/artifacts/pg721_metadata_onchain.wasm --from $KEY --gas auto --gas-adjustment 1.5 -y
+
+sleep 10
 
 NFT_CODE_ID=$(junod query wasm list-code --output json | jq -r '.code_infos[-1].code_id')
 sed -i "s/^new_nft_code_id=.*/new_nft_code_id=$NFT_CODE_ID/" .env
 
-migrate_msg='{"minter":"'"$MINT_CONTRACT"'"}' 
+migrate_msg='{"minter":"'"$MINT_CONTRACT"'"}'
 echo "Change minter to minting contract...."
-junod tx wasm migrate "$new_nft_address" "$NFT_CODE_ID" "$migrate_msg" --from $KEY --chain-id $CHAINID --gas auto --gas-adjustment 1.15 -y -b block
+junod tx wasm migrate "$new_nft_address" "$NFT_CODE_ID" "$migrate_msg" --from $KEY --gas auto --gas-adjustment 1.5 -y
 
 # wait for minting to start
 sleep 10
 
 echo "Minting token"
-junod tx wasm execute "$MINT_CONTRACT" '{"mint":{}}' --amount 100stake --from $KEY --chain-id $CHAINID --gas auto --gas-adjustment 1.15 -y -b block
+junod tx wasm execute "$MINT_CONTRACT" '{"mint":{}}' --amount 100ujuno --from $KEY --gas auto --gas-adjustment 1.5 -y
+
+sleep 10

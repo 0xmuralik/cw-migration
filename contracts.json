@@ -1,31 +1,11 @@
 {
-	"contracts": [{
+	"contracts": [
+		{
 			"name": "metahuahua",
-			"nft": "juno10nv5896xx4v6wu2svkghwxd0j5t8c26ehzwhr2y8q959zzwh3m8qyxryw0",
-			"mint": "juno15yalm0qgg0wzs4etkzzputy7hum8ryzc0rrfzfplnqjeyfrpufwq9u2zwd",
-			"marketplace":"juno1wefnd9l3fl68knhhm445mq9f2v9yyna7q63m9yl2pwkemlsrfmhqlys9p7",
-			"adminKey":"murali"
-		},
-		{
-			"name": "strange_clan_deran_fang",
-			"nft": "juno1za0uemnhzwkjrqwguy34w45mqdlzfm9hl4s5gp5jtc0e4xvkrwjs6s2rt4",
-			"mint": null,
-			"marketplace":"juno177m3f78mg5cek8gf5xgea49vs32dt3d6f9dwmuxd3hez3nd7yzgq3ahufw",
-			"adminKey":"murali"
-		},
-		{
-			"name": "strange_clan_kira",
-			"nft": "juno10r96k8x6szjvc4yme6rh7venu2mqhuemnfnwzn7xquulqpsslp4s20ndcq",
-			"mint": "juno195qvjp8p545aghtzs3l5x45vjrzl5rjnj8zwm4dyvrtn6upks2qsc93s2t",
-			"marketplace":"juno1lmknz9atq3m739u8xkk35l57v88vq70g4s68mg747f3zum4dfutqsqszu4",
-			"adminKey":"murali"
-		},
-		{
-			"name": "strange_clan_eggs",
-			"nft": "juno16rl04dstt32tdgwu0kejmymfnu50kzz3meys7trj0z9wh6ypqzcqlmxqu3",
-			"mint": null,
-			"marketplace":"juno1ll8833g74dj6rk4ehcwwk0wvfm33dzf8n3d9dmzv20pu4x2x99qsum20vr",
-			"adminKey":"murali"
+			"nft": "juno1qg5ega6dykkxc307y25pecuufrjkxkaggkkxh7nad0vhyhtuhw3seew7v3",
+			"mint": "juno1zwv6feuzhy6a9wekh96cd57lsarmqlwxdypdsplw6zhfncqw6ftqzzdhr6",
+			"marketplace":"juno1466nf3zuxpya8q9emxukd7vftaf6h4psr0a07srl5zw74zh84yjqqwsffy",
+			"adminKey":"key1"
 		}
 	]
 }

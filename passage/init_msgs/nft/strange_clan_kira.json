@@ -1,11 +1,12 @@
 {
+	"name": "Strange Clan: Kira",
+	"symbol": "SCT2",
 	"minter": "${minter_addr}",
-	"name": "Strange Clan: Egg",
-	"symbol": "SCE",
 	"collection_info": {
-		"creator": "pasg166a65em64adkm8mt8j2wcz7hzlq52x9qvm06ev",
-		"description": "The eggs of the Strange Clan world.",
+		"creator": "pasg180xkw8sh863g8m7s32udv3zgrn3ugfyu50hsap",
+		"description": "Town 2 of the Strange Clan NFT collection",
+		"image": "ipfs://bafkreicjlpmnlnjvy4jzz5lhq3w2rqpfjhcrmirmo7srvjeij3xyobipmi",
 		"external_link": "https://market.passage3d.com/",
-		"image": "ipfs://bafybeia5ekl2xcf5z6yefttabbw62qr3d42gob2gc2nghagcdo4ib7fw5q"
+		"royalty_info": null
 	}
 }

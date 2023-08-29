@@ -1,26 +1,20 @@
 [
   {
-    "name": "metahuahua",
-    "nft": "pasg1utq2w4lx80jucnrqe9pzkhfyatl344xenxgjvcjc4v65nl3574jsz7vhqk",
-    "mint": "pasg1knlawfctdg9k8649etluxz9j2pg86sr838rfrk3xjx62ssmkmnzstf39d7",
-    "marketplace": "pasg1m02rvlnktwt077789gnrpa400s9emnth4wzr9yvsdu9syzy53g2qrj366v"
-  },
-  {
     "name": "strange_clan_deran_fang",
-    "nft": "pasg1sgv38zd5z4fje0djf7u08t9cdfqe0kx9nl4x3k8rdx7wkr2sttgscfgetk",
+    "nft": "pasg1466nf3zuxpya8q9emxukd7vftaf6h4psr0a07srl5zw74zh84yjqsj0dac",
     "mint": "null",
-    "marketplace": "pasg108wwdt0psawvtgeudmpdvsye8d4nghhr4squg2auavl5t9qzsrhqmgrcrr"
+    "marketplace": "pasg13ehuhysn5mqjeaheeuew2gjs785f6k7jm8vfsqg3jhtpkwppcmzqw394k3"
   },
   {
     "name": "strange_clan_kira",
-    "nft": "pasg10ygmxxlxnzpfgs6luccp0pz50qt24u33jd96z5hsduq32xzu4smq74knd5",
-    "mint": "pasg1496cn4r4hrst4j60j5cvnhhnng85vug6ds66xp3vclh8nvt9uegsv344r4",
-    "marketplace": "pasg1q5pvpxv3f84pkxxzgv76e5ayvnkf8a46qze5rn8umng0gmyjspcsjs9p8u"
+    "nft": "pasg1qum2tr7hh4y7ruzew68c64myjec0dq2s2njf6waja5t0w879lutqf8jek2",
+    "mint": "pasg1plr28ztj64a47a32lw7tdae8vluzm2lm7nqk364r4ws50rgwyzgs2cca6q",
+    "marketplace": "pasg19wfdqvt2rfhffpl0unulepjuwcgf0ycz3fu448u2v6f45j2c7fvqxlplel"
   },
   {
     "name": "strange_clan_eggs",
-    "nft": "pasg10dszyr4r9zfa7xvcnvaqx8xmhyt5ks33jp2ppastej73n23fwg5qzsqrae",
+    "nft": "pasg1g4xlpqy29m50j5y69reguae328tc9y83l4299pf2wmjn0xczq5js95qhdv",
     "mint": "null",
-    "marketplace": "pasg1xw9dp9yzqtt662x0llt3m0zanecjs8nwzr6z3k7pjg33h8503shqslv45c"
+    "marketplace": "pasg1p54qvfde6mpnqvz3dnpa78x2qyyr5k4sgw9qr97mxjgklc5gze9scsy8hx"
   }
 ]
