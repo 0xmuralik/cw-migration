@@ -16,6 +16,6 @@ for ((i=0;i<len;i++)); do
     sed -i "s/^minter_address=.*/minter_address=$mint/" .env
     sed -i "s/^marketplace_address=.*/marketplace_address=$market/" .env
     sed -i "s/^KEY=.*/KEY=$key/" .env
-    
+
     ./decommission.sh
 done

@@ -8,7 +8,7 @@ python3 export_nft.py
 # migrate nft contract
 ./deploy_pg721.sh
 
-if [ -z "$mint_address" ] || [ "$mint_address" == "null" ]; then 
+if [ -z "$mint_address" ] || [ "$mint_address" == "null" ]; then
     sed -i "s/^new_mint_address=.*/new_mint_address=null/" .env
     echo "no mint contract to migrate"
 else

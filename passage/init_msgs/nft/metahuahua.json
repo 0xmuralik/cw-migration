@@ -3,12 +3,12 @@
 	"symbol": "MH",
 	"minter": "${minter_addr}",
 	"collection_info": {
-		"creator": "pasg166a65em64adkm8mt8j2wcz7hzlq52x9qvm06ev",
+		"creator": "pasg180xkw8sh863g8m7s32udv3zgrn3ugfyu50hsap",
 		"description": "THE WOOFIEST PASSPORT TO THE METAVERSE",
 		"image": "ipfs://bafybeideczllcb5kz75hgy25irzevarybvazgdiaeiv2xmgqevqgo6d3ua/2990.png",
 		"external_link": "https://www.aaa-metahuahua.com/",
 		"royalty_info": {
-			"payment_address": "pasg166a65em64adkm8mt8j2wcz7hzlq52x9qvm06ev",
+			"payment_address": "pasg180xkw8sh863g8m7s32udv3zgrn3ugfyu50hsap",
 			"share": "0.1"
 		}
 	}
