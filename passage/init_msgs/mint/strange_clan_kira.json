@@ -4,7 +4,7 @@
 	"per_address_limit": 10000,
 	"whitelist": null,
 	"cw721_address": "${new_nft_address}",
-	"start_time": "1693483682000000000",
+	"start_time": "1693404273294676678",
 	"unit_price": {
 		"amount": "1000",
 		"denom": "upasg"

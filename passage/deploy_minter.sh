@@ -32,9 +32,7 @@ echo "$MINT_INIT"
 
 # instantiate contract
 echo "Instantiating $name minting contract..."
-passage tx wasm instantiate "$CODE_ID" "$MINT_INIT" --from "$KEY" --label "minter metadata onchain" --admin "$minter_addr" --gas auto --gas-adjustment 1.15 -y -b block
-
-MINT_CONTRACT=$(passage query wasm list-contract-by-code "$CODE_ID" --output json | jq -r '.contracts[-1]')
+MINT_CONTRACT=$(passage tx wasm instantiate "$CODE_ID" "$MINT_INIT" --from "$KEY" --label "minter metadata onchain" --admin "$minter_addr" --gas auto --gas-adjustment 1.15 -y -b block| jq -r '.logs[0]["events"][0]["attributes"][0]["value"]')
 
 echo "$name minter contract deployed. Minter contract address: $MINT_CONTRACT"
 sed -i "s/^new_mint_address=.*/new_mint_address=$MINT_CONTRACT/" .env

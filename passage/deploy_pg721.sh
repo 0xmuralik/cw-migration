@@ -37,9 +37,8 @@ NFT_INIT=$(echo "$NFT_INIT" | jq '.minter="'"$ADDR"'"')
 
 # instantiate contract
 echo "Instantiating $name nft contract..."
-passage tx wasm instantiate "$NFT_CODE_ID" "$NFT_INIT" --from "$KEY" --label "nft metadata onchain" --admin "$ADDR" --gas auto --gas-adjustment 1.15 -y -b block
+NFT_CONTRACT=$(passage tx wasm instantiate "$NFT_CODE_ID" "$NFT_INIT" --from "$KEY" --label "nft metadata onchain" --admin "$ADDR" --gas auto --gas-adjustment 1.15 -y -b block| jq -r '.logs[0]["events"][0]["attributes"][0]["value"]')
 
-NFT_CONTRACT=$(passage query wasm list-contract-by-code "$NFT_CODE_ID" --output json | jq -r '.contracts[-1]')
 sed -i "s/^new_nft_address=.*/new_nft_address=$NFT_CONTRACT/" .env
 
 echo "$name NFT contract deployed. NFT contract address: $NFT_CONTRACT"
