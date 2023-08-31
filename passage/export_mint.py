@@ -6,9 +6,12 @@ import os
 from dotenv import load_dotenv
 
 def fetch_json(url):
-    response = requests.get(url)
-    response.raise_for_status()
-    return response.json()
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+        return response.json()
+    except Exception as e:
+        print(e)
 
 def append_to_json_array(json_array, json_object):
     json_array.append(json_object)
@@ -34,10 +37,17 @@ def create_mint_migrations(models):
         "minters":models["minters"]
     }
 
-    with open("../output/mint_migrations.json", "w") as file:
+    name = os.getenv("name")
+    with open("../output/"+name+"/mint_migrations.json", "w") as file:
         json.dump(mint_migrations, file,indent=4)
 
 def main():
+    name = os.getenv("name")
+    isExist = os.path.exists("../output/"+name)
+    if not isExist:
+       # Create a new directory because it does not exist
+       os.makedirs("../output/"+name)
+       print("The new directory is created!")
     # JSON array
     rest = []
     minters =[]
@@ -54,13 +64,16 @@ def main():
     # Pagination loop
     pagination_key = ""
     count=0
+    offset=0
+    limit=100
     while True:
         # Make the request
-        response = fetch_json(f"{url}?pagination.key={pagination_key}")
+        response = fetch_json(f"{url}?pagination.offset={offset}&pagination.limit={limit}")
 
         # Extract the JSON objects from the response
         json_objects = response.get("models", [])
         count+=len(json_objects)
+        offset += len(json_objects)
 
         print("got "+str(count)+"/"+total+" items")
 
@@ -88,16 +101,18 @@ def main():
 
 
         # Check if there are more pages
-        pagination_key = response.get("pagination").get("next_key")
-        if not pagination_key:
+        if len(json_objects) < 100:
             break
+        # pagination_key = response.get("pagination").get("next_key")
+        # if not pagination_key:
+        #     break
     
     models = {"tokens":tokens,"minters":minters,"mintable_tokens":mintable_tokens,"config":config,"models":rest}
 
     create_mint_migrations(models)
 
     # Save the updated JSON array to a file
-    with open("../output/mint.json", "w") as file:
+    with open("../output/"+name+"/mint.json", "w") as file:
         json.dump(models, file,indent=4)
 
 if __name__ == "__main__":

@@ -41,10 +41,17 @@ def create_nft_migrations(models):
         "migrations":models["tokens"]
     }
 
-    with open("../output/nft_migrations.json", "w") as file:
+    name = os.getenv("name")
+    with open("../output/"+name+"/nft_migrations.json", "w") as file:
         json.dump(nft_migrations, file,indent=4)
 
 def main():
+    name = os.getenv("name")
+    isExist = os.path.exists("../output/"+name)
+    if not isExist:
+       # Create a new directory because it does not exist
+       os.makedirs("../output/"+name)
+       print("The new directory is created!")
     # JSON array
     tokens = []
     rest = []
@@ -60,13 +67,16 @@ def main():
     # Pagination loop
     pagination_key = ""
     count=0
+    limit=100
+    offset=0
     while True:
         # Make the request
-        response = fetch_json(f"{url}?pagination.key={pagination_key}")
+        response = fetch_json(f"{url}?pagination.offset={offset}&pagination.limit={limit}")
 
         # Extract the JSON objects from the response
         json_objects = response.get("models", [])
         count+=len(json_objects)
+        offset += len(json_objects)
 
         print("got "+str(count)+"/"+total+" items")
 
@@ -103,13 +113,15 @@ def main():
                 append_to_json_array(rest, json_object)
 
         # Check if there are more pages
-        pagination_key = response.get("pagination").get("next_key")
-        if not pagination_key:
+        if len(json_objects) < 100:
             break
+        # pagination_key = response.get("pagination").get("next_key")
+        # if not pagination_key:
+        #     break
     models = {"tokens": tokens,"nft_info":nft_info,"collection_info":collection_info,"rest": rest}
 
     # Save the updated JSON array to a file
-    with open("../output/nft.json", "w") as file:
+    with open("../output/"+name+"/nft.json", "w") as file:
         json.dump(models, file,indent=4)
 
     create_nft_migrations(models)

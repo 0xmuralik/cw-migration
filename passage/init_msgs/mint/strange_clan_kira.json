@@ -1,10 +1,10 @@
 {
 	"max_num_tokens": 10000,
-	"cw721_code_id": "${new_nft_code_id}",
+	"cw721_code_id": "${pg721_code}",
 	"per_address_limit": 10000,
 	"whitelist": null,
 	"cw721_address": "${new_nft_address}",
-	"start_time": "1693404273294676678",
+	"start_time": "1693484305294676678",
 	"unit_price": {
 		"amount": "1000",
 		"denom": "upasg"

@@ -1,0 +1,12 @@
+{
+    "members": [
+    ],
+    "start_time": "1693413728703337526",
+    "end_time": "1693513728703337526",
+    "unit_price": {
+      "amount": "2900000",
+      "denom": "upasg"
+    },
+    "per_address_limit": 10,
+    "member_limit": 10000
+  }
