@@ -80,7 +80,7 @@ else
 fi
 
 # export nft data from juno contracts
-python3 export_nft.py
+# python3 export_nft.py
 
 # migrate nft contract
 ./deploy_pg721.sh
@@ -90,7 +90,7 @@ if [ -z "$mint_address" ] || [ "$mint_address" == "null" ]; then
     echo "no mint contract to migrate"
 else
     # export minter data from juno contracts
-    python3 export_mint.py
+    # python3 export_mint.py
 
     # migrate minter contract
     ./deploy_minter.sh

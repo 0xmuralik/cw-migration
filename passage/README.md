@@ -23,7 +23,7 @@ Example:
     "nft": "juno10nv5896xx4v6wu2svkghwxd0j5t8c26ehzwhr2y8q959zzwh3m8qyxryw0",
     "mint": "juno15yalm0qgg0wzs4etkzzputy7hum8ryzc0rrfzfplnqjeyfrpufwq9u2zwd",
     "marketplace": "juno1wefnd9l3fl68knhhm445mq9f2v9yyna7q63m9yl2pwkemlsrfmhqlys9p7",
-    "adminKey": "contract-migration"
+    "adminKey": "aleem"
 }
 ```
 

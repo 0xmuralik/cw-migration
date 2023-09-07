@@ -36,7 +36,19 @@ for ((i=0;i<iterations;i++)); do
     }'
 
     echo "Migrating tokens $((i+1)) / $iterations"
-    passage tx wasm execute "$MINT_CONTRACT" "$MIGRATIONS" --from "$KEY" --gas auto --gas-adjustment 1.15 -y -b block
+    txResult=$(passage tx wasm execute "$MINT_CONTRACT" "$MIGRATIONS" --from "$KEY" --gas 100000000 --gas-adjustment 1.8 -y -b block)
+    if [[ $txResult == *"Internal error: timed out waiting for tx to be included in a block"* ]]; then
+        echo $txResult
+        sleep 10
+    elif [[ $txResult == *"account sequence mismatch"* ]]; then
+        echo $txResult
+        i=$((i-1))
+        sleep 10
+    else
+        echo $txResult
+        sleep 5
+    fi
+
 
 done
 
@@ -57,7 +69,19 @@ for ((i=0;i<iterations;i++)); do
     }'
 
     echo "Migrating minters $((i+1)) / $iterations"
-    passage tx wasm execute "$MINT_CONTRACT" "$MIGRATIONS" --from "$KEY" --gas auto --gas-adjustment 1.15 -y -b block
+    txResult=$(passage tx wasm execute "$MINT_CONTRACT" "$MIGRATIONS" --from "$KEY" --gas 100000000 --gas-adjustment 1.8 -y -b block)
+    if [[ $txResult == *"Internal error: timed out waiting for tx to be included in a block"* ]]; then
+        echo $txResult
+        sleep 10
+    elif [[ $txResult == *"account sequence mismatch"* ]]; then
+        echo $txResult
+        i=$((i-1))
+        sleep 10
+    else
+        echo $txResult
+        sleep 5
+    fi
+
 
     
 done
@@ -74,10 +98,13 @@ MIGRATIONS='{
     }'
 
     echo "Migrating mintable tokens"
-    passage tx wasm execute "$MINT_CONTRACT" "$MIGRATIONS" --from "$KEY" --gas auto --gas-adjustment 1.15 -y -b block
+    passage tx wasm execute "$MINT_CONTRACT" "$MIGRATIONS" --from "$KEY" --gas 100000000 --gas-adjustment 1.8 -y -b block
+    sleep 10
+
 
     
 
 # mark migration done
 echo "Migration done"
-passage tx wasm execute "$MINT_CONTRACT" '{"migration_done":{}}' --from "$KEY" --gas auto --gas-adjustment 1.15 -y -b block
+passage tx wasm execute "$MINT_CONTRACT" '{"migration_done":{}}' --from "$KEY" --gas 100000000 --gas-adjustment 1.8 -y -b block
+sleep 5

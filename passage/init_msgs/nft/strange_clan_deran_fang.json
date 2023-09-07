@@ -3,13 +3,13 @@
 	"symbol": "yawp",
 	"minter": "${minter_addr}",
 	"collection_info": {
-		"creator": "pasg180xkw8sh863g8m7s32udv3zgrn3ugfyu50hsap",
+		"creator": "pasg1shkqyg74y4chwxjvnsur0j4v87ldfz80ryt26x",
 		"description": "Strange Clan Deran Fang",
 		"image": "ipfs://bafkreicjlpmnlnjvy4jzz5lhq3w2rqpfjhcrmirmo7srvjeij3xyobipmi",
-		"external_link": "https://market.passage3d.com/",
+		"external_link": "https://app.passage.io/",
 		"royalty_info": {
-			"payment_address": "pasg180xkw8sh863g8m7s32udv3zgrn3ugfyu50hsap",
-			"share": "0.1"
+			"payment_address": "pasg1shkqyg74y4chwxjvnsur0j4v87ldfz80ryt26x",
+			"share": "0.03"
 		}
 	}
 }

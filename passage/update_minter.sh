@@ -6,7 +6,7 @@ git switch murali/new_nft_version
 cd "$CURRENT_DIR" || exit
 
 echo "Deploying $name pg721 metadata onchain contract..."
-RESULT=$(passage tx wasm store "$PATH_TO_CONTRACTS"/artifacts/pg721_metadata_onchain.wasm --from "$KEY" --gas auto --gas-adjustment 1.15 -y -b block)
+RESULT=$(passage tx wasm store "$PATH_TO_CONTRACTS"/artifacts/pg721_metadata_onchain.wasm --from "$KEY" --gas 100000000 --gas-adjustment 1.8 -y -b block)
 
 CODE=$(echo $RESULT | jq -r '.code')
 if [ $CODE != 0 ]; then
@@ -29,4 +29,5 @@ sed -i "s/^new_nft_code_id=.*/new_nft_code_id=$NFT_CODE_ID/" .env
 migrate_msg='{"minter":"'"$new_mint_address"'"}' 
 
 echo "Change $name minter to minting contract...."
-passage tx wasm migrate "$new_nft_address" "$NFT_CODE_ID" "$migrate_msg" --from "$KEY" --gas auto --gas-adjustment 1.15 -y -b block
+passage tx wasm migrate "$new_nft_address" "$NFT_CODE_ID" "$migrate_msg" --from "$KEY" --gas 100000000 --gas-adjustment 1.8 -y -b block
+sleep 10

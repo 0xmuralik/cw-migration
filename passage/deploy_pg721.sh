@@ -16,7 +16,7 @@ NFT_INIT=$(echo "$NFT_INIT" | jq '.minter="'"$ADDR"'"')
 
 # instantiate contract
 echo "Instantiating $name nft contract..."
-NFT_CONTRACT=$(passage tx wasm instantiate "$pg721_code" "$NFT_INIT" --from "$KEY" --label "nft metadata onchain" --admin "$ADDR" --gas auto --gas-adjustment 1.15 -y -b block| jq -r '.logs[0]["events"][0]["attributes"][0]["value"]')
+NFT_CONTRACT=$(passage tx wasm instantiate "$pg721_code" "$NFT_INIT" --from "$KEY" --label "nft metadata onchain" --admin "$ADDR" --gas 100000000 --gas-adjustment 1.8 -y -b block| jq -r '.logs[0]["events"][0]["attributes"][0]["value"]')
 
 sed -i "s/^new_nft_address=.*/new_nft_address=$NFT_CONTRACT/" .env
 
@@ -33,15 +33,27 @@ for ((i=0;i<iterations;i++)); do
     MIGRATIONS='{
         "migrate": {
             "migrations": '$TOKENS'
-        }    
+        }  
     }'
 
     echo "Migration $((i+1)) / $iterations"
-    passage tx wasm execute "$NFT_CONTRACT" "$MIGRATIONS" --from "$KEY" --gas auto --gas-adjustment 1.15 -y -b block
+    txResult=$(passage tx wasm execute "$NFT_CONTRACT" "$MIGRATIONS" --from "$KEY" --gas 100000000 --gas-adjustment 1.8 -y -b block)
+    if [[ $txResult == *"Internal error: timed out waiting for tx to be included in a block"* ]]; then
+        echo $txResult
+        sleep 10
+    elif [[ $txResult == *"account sequence mismatch"* ]]; then
+        echo $txResult
+        i=$((i-1))
+        sleep 10
+    else
+        echo $txResult
+        sleep 5
+    fi
 
-    
+
 done
 # mark migration done
 
 echo "Migration done"
-passage tx wasm execute "$NFT_CONTRACT" '{"migration_done":{}}' --from "$KEY" --gas auto --gas-adjustment 1.15 -y -b block
+passage tx wasm execute "$NFT_CONTRACT" '{"migration_done":{}}' --from "$KEY" --gas 100000000 --gas-adjustment 1.8 -y -b block
+sleep 2

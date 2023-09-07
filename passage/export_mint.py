@@ -59,6 +59,8 @@ def main():
 
     # URL with pagination
     url = f"https://juno.stakesystems.io/cosmwasm/wasm/v1/contract/{contract_address}/state"
+    print("minter")
+    print(contract_address)
     print("Fetching data from ",url)
     total = fetch_json(url).get("pagination").get("total")
     # Pagination loop
