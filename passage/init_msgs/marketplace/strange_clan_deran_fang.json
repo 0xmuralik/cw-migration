@@ -1,8 +1,8 @@
 {
 	"cw721_address": "${nft_address}",
 	"denom": "upasg",
-	"collector_address": "pasg180xkw8sh863g8m7s32udv3zgrn3ugfyu50hsap",
-	"trading_fee_bps": 50,
+	"collector_address": "pasg1shkqyg74y4chwxjvnsur0j4v87ldfz80ryt26x",
+	"trading_fee_bps": 600,
 	"operators": ["pasg180xkw8sh863g8m7s32udv3zgrn3ugfyu50hsap"],
 	"min_price": "1000"
 }
